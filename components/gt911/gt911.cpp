@@ -14,7 +14,7 @@ void GT911::setup(){
 
 void GT911::update(){
   read();
-  this->publish_state();
+  this->publish_state(touches);
 }
 
 void GT911::dump_config(){
