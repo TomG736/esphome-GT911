@@ -135,9 +135,6 @@
 #define GT911_POINT_5           (uint16_t)0X816F
 #define GT911_POINTS_REG        {GT911_POINT_1, GT911_POINT_2, GT911_POINT_3, GT911_POINT_4, GT911_POINT_5}
 
-#define lowByte(a)  (a & 0x00FF)
-#define highByte(a) ((a >> 8) & 0x00FF)
-
 namespace esphome {
 namespace gt911 {
 
