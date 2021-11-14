@@ -136,8 +136,8 @@
 #define GT911_POINTS_REG        {GT911_POINT_1, GT911_POINT_2, GT911_POINT_3, GT911_POINT_4, GT911_POINT_5}
 
 #ifndef lowByte
-  #define lowByte(a)  ((byte)(a & 0xFF))
-  #define highByte(a) ((byte)((a >> 8) & 0xFF))
+  #define lowByte(a)  ((uint8_t)(a & 0xFF))
+  #define highByte(a) ((uint8_t)((a >> 8) & 0xFF))
 #endif
 namespace esphome {
 namespace gt911 {
