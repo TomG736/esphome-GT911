@@ -8,12 +8,12 @@ static const char *TAG = "gt911.sensor";
 
 void GT911::setup(){
     
-  readBlockData(configBuf, GT911_CONFIG_START, GT911_CONFIG_SIZE);
-  setResolution(width, height);
+  this->readBlockData(configBuf, GT911_CONFIG_START, GT911_CONFIG_SIZE);
+  this->setResolution(width, height);
 }
 
 void GT911::update(){
-  read();
+  this->read();
   this->publish_state(touches);
 }
 
@@ -31,9 +31,9 @@ void GT911::calculate_checksum() {
 }
 
 void GT911::reflashConfig() {
-  calculateChecksum();
-  writeByteData(GT911_CONFIG_CHKSUM, configBuf[GT911_CONFIG_CHKSUM-GT911_CONFIG_START]);
-  writeByteData(GT911_CONFIG_FRESH, 1);
+  this->calculateChecksum();
+  this->writeByteData(GT911_CONFIG_CHKSUM, configBuf[GT911_CONFIG_CHKSUM-GT911_CONFIG_START]);
+  this->writeByteData(GT911_CONFIG_FRESH, 1);
 }
 
 void GT911::setRotation(uint8_t rot) {
@@ -45,7 +45,7 @@ void GT911::setResolution(uint16_t _width, uint16_t _height) {
   configBuf[GT911_X_OUTPUT_MAX_HIGH - GT911_CONFIG_START] = highByte(_width);
   configBuf[GT911_Y_OUTPUT_MAX_LOW - GT911_CONFIG_START] = lowByte(_height);
   configBuf[GT911_Y_OUTPUT_MAX_HIGH - GT911_CONFIG_START] = highByte(_height);
-  reflashConfig();
+  this->reflashConfig();
 }
 void GT911::read(void) {
   // Serial.println("TAMC_GT911::read");
@@ -53,7 +53,7 @@ void GT911::read(void) {
   uint8_t id;
   uint16_t x, y, size;
 
-  uint8_t pointInfo = readByteData(GT911_POINT_INFO);
+  uint8_t pointInfo = this->readByteData(GT911_POINT_INFO);
   uint8_t bufferStatus = pointInfo >> 7 & 1;
   uint8_t proximityValid = pointInfo >> 5 & 1;
   uint8_t haveKey = pointInfo >> 4 & 1;
@@ -67,11 +67,11 @@ void GT911::read(void) {
   isTouched = touches > 0;
   if (bufferStatus == 1 && isTouched) {
     for (uint8_t i=0; i<touches; i++) {
-      readBlockData(data, GT911_POINT_1 + i * 8, 7);
-      points[i] = readPoint(data);
+      this->readBlockData(data, GT911_POINT_1 + i * 8, 7);
+      points[i] = this->readPoint(data);
     }
   }
-  writeByteData(GT911_POINT_INFO, 0);
+  this->writeByteData(GT911_POINT_INFO, 0);
 }
 TP_Point GT911::readPoint(uint8_t *data) {
   uint16_t temp;
@@ -110,7 +110,7 @@ void GT911::writeByteData(uint16_t reg, uint8_t val) {
 
 uint8_t GT911::readByteData(uint16_t reg) {
   uint8_t x;
-  this->write_byte(highByte(reg), lowByte(highByte) << 8);
+  this->write_byte(highByte(reg), lowByte(highByte));
   uint8_t data;
   this->read(&data, 1);
   return data;
