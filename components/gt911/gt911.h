@@ -164,7 +164,7 @@ class GT911 : public sensor::Sensor, public PollingComponent, public i2c::I2CDev
     void reflashConfig();
     void setRotation(uint8_t rot);
     void setResolution(uint16_t _width, uint16_t _height);
-    void read(void);
+    void readTouches(void);
     TP_Point readPoint(uint8_t *data);
     void writeByteData(uint16_t reg, uint8_t val);
     uint8_t readByteData(uint16_t reg);

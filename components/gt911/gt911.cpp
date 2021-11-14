@@ -13,7 +13,7 @@ void GT911::setup(){
 }
 
 void GT911::update(){
-  this->read();
+  this->readTouches();
   this->publish_state(touches);
 }
 
@@ -31,7 +31,7 @@ void GT911::calculate_checksum() {
 }
 
 void GT911::reflashConfig() {
-  this->calculateChecksum();
+  this->calculate_checksum();
   this->writeByteData(GT911_CONFIG_CHKSUM, configBuf[GT911_CONFIG_CHKSUM-GT911_CONFIG_START]);
   this->writeByteData(GT911_CONFIG_FRESH, 1);
 }
@@ -47,7 +47,7 @@ void GT911::setResolution(uint16_t _width, uint16_t _height) {
   configBuf[GT911_Y_OUTPUT_MAX_HIGH - GT911_CONFIG_START] = highByte(_height);
   this->reflashConfig();
 }
-void GT911::read(void) {
+void GT911::readTouches(void) {
   // Serial.println("TAMC_GT911::read");
   uint8_t data[7];
   uint8_t id;
@@ -105,12 +105,12 @@ TP_Point GT911::readPoint(uint8_t *data) {
 }
 
 void GT911::writeByteData(uint16_t reg, uint8_t val) {
-  this->write_byte_16(highByte(reg), lowByte(highByte) << 8 | val);
+  this->write_byte_16(highByte(reg), lowByte(reg) << 8 | val);
 }
 
 uint8_t GT911::readByteData(uint16_t reg) {
   uint8_t x;
-  this->write_byte(highByte(reg), lowByte(highByte));
+  this->write_byte(highByte(reg), lowByte(reg));
   uint8_t data;
   this->read(&data, 1);
   return data;
