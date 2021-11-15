@@ -170,7 +170,7 @@ class GT911 : public sensor::Sensor, public PollingComponent, public i2c::I2CDev
     void writeByteData(uint16_t reg, uint8_t val);
     uint8_t readByteData(uint16_t reg);
     void writeBlockData(uint16_t reg, uint8_t *val, uint8_t size);
-    void readBlockData(uint8_t *buf, uint16_t reg, uint8_t size);
+    bool readBlockData(uint8_t *buf, uint16_t reg, uint8_t size);
 
   private:
     uint8_t rotation = ROTATION_NORMAL;
@@ -180,6 +180,7 @@ class GT911 : public sensor::Sensor, public PollingComponent, public i2c::I2CDev
     uint8_t isLargeDetect;
     uint8_t touches = 0;
     bool isTouched = false;
+    bool setupComplete = false;
     TP_Point points[5];
 };
 

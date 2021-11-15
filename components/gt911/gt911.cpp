@@ -7,18 +7,25 @@ namespace gt911 {
 static const char *TAG = "gt911.sensor";
 
 void GT911::setup(){
-    
-  this->readBlockData(configBuf, GT911_CONFIG_START, GT911_CONFIG_SIZE);
-  this->setResolution(width, height);
+  if(this->readBlockData(configBuf, GT911_CONFIG_START, GT911_CONFIG_SIZE)){
+    this->setResolution(width, height);
+    this->setupComplete = true;
+  }else{
+    this->setupComplete = false;
+  }
 }
 
 void GT911::update(){
+  if(!this->setupComplete){
+    return;
+  }
   this->readTouches();
   this->publish_state(touches);
 }
 
 void GT911::dump_config(){
-
+  ESP_LOGCONFIG(TAG, "  Address: 0x%02X", this->address_);
+  ESP_LOGCONFIG(TAG, "  setupComplete: %s", this->setupComplete? "true", "false");
 }
 
 void GT911::calculate_checksum() {
@@ -121,9 +128,14 @@ void GT911::writeBlockData(uint16_t reg, uint8_t *val, uint8_t size) {
   this->write(val, size);
 }
 
-void GT911::readBlockData(uint8_t *buf, uint16_t reg, uint8_t size) {
-  this->write((uint8_t*)&reg, 2);
-  this->read(buf, size);
+bool GT911::readBlockData(uint8_t *buf, uint16_t reg, uint8_t size) {
+  ErrorCode e;
+  e = this->write((uint8_t*)&reg, 2);
+  if(e != ERROR_OK){
+    return false;
+  }
+  e = this->read(buf, size);
+  return e == ERROR_OK;
 }
 
 TP_Point::TP_Point(void) {
