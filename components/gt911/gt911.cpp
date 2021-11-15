@@ -25,7 +25,7 @@ void GT911::update(){
 
 void GT911::dump_config(){
   ESP_LOGCONFIG(TAG, "  Address: 0x%02X", this->address_);
-  ESP_LOGCONFIG(TAG, "  setupComplete: %s", this->setupComplete? "true", "false");
+  ESP_LOGCONFIG(TAG, "  setupComplete: %s", this->setupComplete ? "true" : "false");
 }
 
 void GT911::calculate_checksum() {
