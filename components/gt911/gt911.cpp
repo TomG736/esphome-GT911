@@ -25,6 +25,7 @@ void GT911::update(){
 }
 
 void GT911::dump_config(){
+  ESP_LOGCONFIG(TAG, "GT911:");
   ESP_LOGCONFIG(TAG, "  Address: 0x%02X", this->address_);
   ESP_LOGCONFIG(TAG, "  setupComplete: %s", this->setupComplete ? "true" : "false");
 }
@@ -130,13 +131,13 @@ void GT911::writeBlockData(uint16_t reg, uint8_t *val, uint8_t size) {
 }
 
 bool GT911::readBlockData(uint8_t *buf, uint16_t reg, uint8_t size) {
-  ErrorCode e;
+  esphome::i2c::ErrorCode e;
   e = this->write((uint8_t*)&reg, 2);
-  if(e != ERROR_OK){
+  if(e != esphome::i2c::ERROR_OK){
     return false;
   }
   e = this->read(buf, size);
-  return e == ERROR_OK;
+  return e == esphome::i2c::ERROR_OK;
 }
 
 TP_Point::TP_Point(void) {
